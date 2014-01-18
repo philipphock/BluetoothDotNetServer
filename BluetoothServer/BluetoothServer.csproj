@@ -36,6 +36,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\32feet.NET\NET\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio">
+      <HintPath>..\lib\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.WindowsMediaFormat">
+      <HintPath>..\lib\NAudio.WindowsMediaFormat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -48,9 +54,11 @@
   <ItemGroup>
     <Compile Include="BluetoothServer.cs" />
     <Compile Include="BluetoothConnectionHandler.cs" />
+    <Compile Include="AudioControl.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandConnectionHandler.cs" />
     <Compile Include="CommandNotFoundException.cs" />
+    <Compile Include="MusicPlayerControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

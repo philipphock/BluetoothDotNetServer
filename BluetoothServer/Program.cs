@@ -11,8 +11,9 @@ namespace BluetoothServer
         static void Main(string[] args)
         {
 
-            BluetoothServer server = new BluetoothServer();
-            Console.ReadKey();
+           BluetoothServer server = new BluetoothServer();
+           
+
         }
     }
 }

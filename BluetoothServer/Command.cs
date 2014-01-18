@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,12 +28,15 @@ namespace BluetoothServer
 
         public Command()
         {
-            commandsDict.Add("standby", standby);   
+            commandsDict.Add("standby", Standby);
+            commandsDict.Add("volume", Volume);
+            commandsDict.Add("musicplayer", Musicplayer);
+            commandsDict.Add("togglemute", ToggleMute);
 
         }
 
 
-        public string execute(string s)
+        public string Execute(string s,string param)
         {
             Console.WriteLine("Command recv " + s);
 
@@ -40,7 +44,7 @@ namespace BluetoothServer
             {
                 Console.WriteLine("Command correct: " + s);
 
-                return commandsDict[s]("");
+                return commandsDict[s](param);
             }
             Console.WriteLine("Command not found: " + s);
 
@@ -49,11 +53,47 @@ namespace BluetoothServer
             
         }
 
-        public string standby(string s){
+        public string Standby(string s){
             Console.WriteLine("Performing standby: " + s);
             Application.SetSuspendState(PowerState.Suspend, true, true);
             _restartHandler = true;
             return "ok_standby";
+        }
+
+        public string Volume(string percent)
+        {
+
+
+            float v = float.Parse(percent,CultureInfo.InvariantCulture.NumberFormat);
+            Console.WriteLine("setting vol to: " + percent);
+            AudioControl.Instance.SetMasterVolume(v);
+            return "ok_volume: " + AudioControl.Instance.GetMasterVolume();
+        }
+
+
+        public string ToggleMute(String s)
+        {
+            AudioControl.Instance.ToggleMute();
+            return "ok_mute";
+        }
+
+        public string Musicplayer(string command)
+        {
+            switch(command){
+                case "playpause":
+                    MusicPlayerControl.Instance.PlayPause();
+                    break;
+
+                case "next":
+                    MusicPlayerControl.Instance.Next();
+                    break;
+
+                case "prev":
+                    MusicPlayerControl.Instance.Prev();
+                    break;
+            }
+            
+            return "ok_musicplayer";
         }
     }
 
