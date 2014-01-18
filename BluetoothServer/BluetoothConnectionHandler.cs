@@ -8,7 +8,7 @@ using InTheHand.Net.Sockets;
 using System.IO;
 namespace BluetoothServer
 {
-    class BluetoothConnectionHandler
+    abstract class BluetoothConnectionHandler
     {
 
         private bool read = true;
@@ -29,14 +29,20 @@ namespace BluetoothServer
             Stream peerStream = btClient.GetStream();
             while (read)
             {
-                received = peerStream.Read(buffer,0,64);
-                if (received <= 0)
+                try
                 {
-                    break;
+                    received = peerStream.Read(buffer, 0, 64);
+                    if (received <= 0)
+                    {
+                        break;
+                    }
+                    String s = encoding.GetString(buffer, 0, received);
+                    Recv(s);
                 }
-                String s = encoding.GetString(buffer, 0, received);
-                Console.WriteLine("Recv: " + s);
-                Send(s);
+                catch (Exception)
+                {
+                    Cancel();
+                }
             }
             
 
@@ -47,9 +53,29 @@ namespace BluetoothServer
         {
             Stream s = this.btClient.GetStream();
             byte[] toSend = encoding.GetBytes(data);
-            s.Write(toSend,0,toSend.Length);
+            try
+            {
+                s.Write(toSend, 0, toSend.Length);
+
+            }
+            catch (IOException)
+            {
+                Cancel();
+            }
 
         }
+        public void Cancel()
+        {
+            read = false;
+            try
+            {
+
+                btClient.GetStream().Close();
+                btClient.Close();
+            }
+            catch (Exception) { }
+        }
+        protected abstract void Recv(string s);
 
     }
 }

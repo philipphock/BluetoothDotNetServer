@@ -58,7 +58,7 @@ namespace BluetoothServer
 
         private void DisplatchConnection(BluetoothClient client)
         {
-            BluetoothConnectionHandler handler = new BluetoothConnectionHandler(client);
+            BluetoothConnectionHandler handler = new CommandConnectionHandler(client);
             handler.Handle();
         }
 
