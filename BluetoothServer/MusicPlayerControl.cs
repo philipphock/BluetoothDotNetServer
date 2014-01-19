@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,15 +23,15 @@ namespace BluetoothServer
 
         public static MusicPlayerControl Instance
         {
-            get 
+            get
             {
-                if (instance == null) 
+                if (instance == null)
                 {
-                lock (syncRoot) 
-                {
-                    if (instance == null)
-                        instance = new MusicPlayerControl();
-                }
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new MusicPlayerControl();
+                    }
                 }
 
                 return instance;
@@ -39,18 +41,19 @@ namespace BluetoothServer
 
         public void PlayPause()
         {
-            Execute("/playpause");
+            SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=PlayOrPause&param3=NoResponse");
         }
 
         public void Next()
         {
-            Execute("/next");
+            SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=StartNext&param3=NoResponse");
         }
+        
 
 
         public void Prev()
         {
-            Execute("/prev");
+            SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=StartPrevious&param3=NoResponse");
         }
 
         private void Execute(string arg)
@@ -63,10 +66,18 @@ namespace BluetoothServer
             Process.Start(startInfo);
         }
 
+        
+
+        private void SendHTTP(String url)
+        {
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "GET";
+            WebResponse response = request.GetResponse();
+
+        }
+
 
     }
-
-
-
     
 }

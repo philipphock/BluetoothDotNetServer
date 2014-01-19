@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,14 +23,18 @@ namespace BluetoothServer
                 server.Send(line);
             }
 
+ 
+            
         }
 
         public static void input()
         {
             server.StartListening();
 
-           
-            
         }
+
+        
+
+        
     }
 }
