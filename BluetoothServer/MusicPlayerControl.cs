@@ -38,10 +38,17 @@ namespace BluetoothServer
             }
         }
 
-
         public void PlayPause()
         {
+            if (!runPlayerWhenNotAlreadyStarted())
+            {
+                return;
+            }
+            
+            Console.WriteLine("wait finish");
+
             SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=PlayOrPause&param3=NoResponse");
+            Console.WriteLine("play send");
         }
 
         public void Next()
@@ -64,6 +71,7 @@ namespace BluetoothServer
             startInfo.RedirectStandardOutput = true;
             startInfo.UseShellExecute = false;
             Process.Start(startInfo);
+            Console.WriteLine("executed foobar");
         }
 
         
@@ -77,6 +85,35 @@ namespace BluetoothServer
 
         }
 
+        private bool runPlayerWhenNotAlreadyStarted()
+        {
+            Process[] processes = Process.GetProcesses();
+            foreach (var proc in processes)
+            {
+                if (!string.IsNullOrEmpty(proc.MainWindowTitle))
+                    if (proc.ProcessName.Equals("foobar2000")){
+                        Console.WriteLine("foobar found");
+                        return true;
+                    }
+            }
+            Console.WriteLine("foobar not found");
+
+            String foo = @"X:\play.bat";
+            UdpClient c = new UdpClient("127.0.0.1", 5566);
+
+            c.Send(Encoding.ASCII.GetBytes(foo), foo.Length);
+            c.Close();
+            // ProcessStartInfo startInfo = new ProcessStartInfo();
+            // startInfo.FileName = @"X:\play.bat";
+            
+            //startInfo.RedirectStandardOutput = true;
+            //startInfo.UseShellExecute = false;
+            //Process.Start(startInfo);
+            //Console.WriteLine("executed foobar");
+        
+
+            return false;
+        }
 
     }
     
