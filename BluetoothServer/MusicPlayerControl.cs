@@ -40,15 +40,12 @@ namespace BluetoothServer
 
         public void PlayPause()
         {
-            if (!runPlayerWhenNotAlreadyStarted())
-            {
-                return;
-            }
+           
             
-            Console.WriteLine("wait finish");
-
-            SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=PlayOrPause&param3=NoResponse");
-            Console.WriteLine("play send");
+            
+            if(!SendHTTP("http://192.168.1.2:9999/ajquery/?cmd=PlayOrPause&param3=NoResponse")){
+                Execute("/play");
+            }
         }
 
         public void Next()
@@ -76,12 +73,19 @@ namespace BluetoothServer
 
         
 
-        private void SendHTTP(String url)
+        private bool SendHTTP(String url)
         {
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            WebResponse response = request.GetResponse();
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                WebResponse response = request.GetResponse();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
         }
 
@@ -98,11 +102,13 @@ namespace BluetoothServer
             }
             Console.WriteLine("foobar not found");
 
-            String foo = @"X:\play.bat";
-            UdpClient c = new UdpClient("127.0.0.1", 5566);
+            Execute("");
 
-            c.Send(Encoding.ASCII.GetBytes(foo), foo.Length);
-            c.Close();
+            //String foo = @"X:\play.bat";
+            //UdpClient c = new UdpClient("127.0.0.1", 5566);
+
+            //c.Send(Encoding.ASCII.GetBytes(foo), foo.Length);
+            //c.Close();
             // ProcessStartInfo startInfo = new ProcessStartInfo();
             // startInfo.FileName = @"X:\play.bat";
             

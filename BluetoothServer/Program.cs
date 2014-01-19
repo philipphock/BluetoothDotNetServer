@@ -18,11 +18,11 @@ namespace BluetoothServer
             server = new BluetoothServer();
             Thread t = new Thread(input);
             t.Start();
-            while (true)
-            {
-                string line = Console.ReadLine();
-                server.Send(line);
-            }
+            //while (true)
+            //{
+            //    string line = Console.ReadLine();
+            //    server.Send(line);
+            //}
             
             
         }
