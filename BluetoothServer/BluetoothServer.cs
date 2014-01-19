@@ -14,7 +14,7 @@ namespace BluetoothServer
     {
         private Guid MyService = new Guid("{94d6b2c0-8034-11e3-baa7-0800200c9a66}");
         private bool listening = true;
-
+        private BluetoothConnectionHandler handler;
         public BluetoothServer(){
             Console.WriteLine("Starting server");
             BluetoothRadio br = BluetoothRadio.PrimaryRadio;
@@ -32,7 +32,7 @@ namespace BluetoothServer
             }
 
 
-            StartListening();
+            
            
            
         }
@@ -47,18 +47,26 @@ namespace BluetoothServer
             listening = true;
             while (listening)
             {
+                
                 Console.WriteLine("wait for device");
                 BluetoothClient conn = btl.AcceptBluetoothClient();
                 Console.WriteLine("device accepted");
-                DisplatchConnection(conn);
+                DispatchConnection(conn);
 
             }
 
         }
 
-        private void DisplatchConnection(BluetoothClient client)
+        public void Send(string data)
         {
-            BluetoothConnectionHandler handler = new CommandConnectionHandler(client);
+            handler.Send(data);
+
+
+        }
+
+        private void DispatchConnection(BluetoothClient client)
+        {
+            handler = new CommandConnectionHandler(client);
             handler.Handle();
         }
 

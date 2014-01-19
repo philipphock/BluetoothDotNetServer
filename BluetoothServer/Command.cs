@@ -32,6 +32,11 @@ namespace BluetoothServer
             commandsDict.Add("volume", Volume);
             commandsDict.Add("musicplayer", Musicplayer);
             commandsDict.Add("togglemute", ToggleMute);
+            commandsDict.Add("request_status", Request_status);
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
         }
 
@@ -65,7 +70,6 @@ namespace BluetoothServer
 
 
             float v = float.Parse(percent,CultureInfo.InvariantCulture.NumberFormat);
-            Console.WriteLine("setting vol to: " + percent);
             AudioControl.Instance.SetMasterVolume(v);
             return "ok_volume: " + AudioControl.Instance.GetMasterVolume();
         }
@@ -95,8 +99,14 @@ namespace BluetoothServer
             
             return "ok_musicplayer";
         }
+        public string Request_status(string s)
+        {
+            float mastervolf = 64.0f/(64-AudioControl.Instance.GetMasterVolume());
+            string mastervol = mastervolf+"";
+            return @"{'vol':"  + mastervol.Replace(',','.') + "}";
+        }
+
     }
 
-
-
+  
 }
